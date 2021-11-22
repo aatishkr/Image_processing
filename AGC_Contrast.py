@@ -2,20 +2,19 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import glob
-threshold = 10
+min_threshold = 10
+max_threshold = 10
 
 img_array = []
 for filename in glob.glob('/home/kali/Documents/16BitFrames/*.png'):
-    img = cv2.imread(filename,0)
+    img = cv2.imread(filename,-1)
     height, width = img.shape
     size = (width,height)
     img_array.append(img)
 
 def histogram(img):
     (row, col) = img.shape[0:2]
-    hist = np.zeros((65536), dtype=np.int32)
-# Take the average of pixel values of the BGR Channels
-# to convert the colored image to grayscale image
+    hist = np.zeros((65536), dtype=np.float64)
     for i in range(row):
         for j in range(col):
             hist[img[i,j]] += 1
@@ -23,26 +22,42 @@ def histogram(img):
 
 def AGC_contrast(img):
     hist = histogram(img)
-    for i in range(65535):
-        if hist[i] > threshold:
-            h_min = hist[i]
+    img_new = np.zeros((240,320), dtype=np.uint8)
+    for i in range(1,65535):
+        if hist[i] > min_threshold:
+            h_min = i
             break
-    for i in range(65535):
-        if hist[65535 - i] > threshold:
-            h_max = hist[i]
+    for i in range(1,65535):
+        if hist[65535 - i] > max_threshold:
+            h_max = 65535 - i
             break
+    print(h_min,h_max)
     height, width = img.shape
+    if h_max == h_min:
+        return img
+
+    LUT  = np.zeros((65536), dtype=np.float64)
+    for i in range(h_min, 65536):
+        LUT[i] = ((np.float64(i) - h_min)/(h_max - h_min))*255
+        if i >= h_max:
+            LUT[i] = 255
+
     for i in range(height):
         for j in range(width):
-            img[i, j] = ((img[i, j] - float(h_min))/float(h_max - h_min))*255
-            
-    return img
+            # if img[i, j] > h_max:
+            #     img[i, j] = h_max
+            # if img[i, j] < h_min:
+            #     img[i, j] = h_min
+            # img_new[i, j] = ((np.float64(img[i, j]) - h_min)/(h_max - h_min))*255
+            img_new[i, j] = LUT[img[i, j]]
+    return img_new
 
 for i in range(len(img_array)):
     img = AGC_contrast(img_array[i])
     # cv2.imshow("grayscale image",img_array[i])
-    cv2.imshow("grayscale image",img)
-    #hist = histogram(img_array[i])
-    #plt.plot(hist)
-    #plt.show()
+    cv2.imshow("grayscale image" ,img)
+    print(i)
+    # hist = histogram(img_array[i])
+    # plt.plot(hist)
+    # plt.show()
     cv2.waitKey(0)
