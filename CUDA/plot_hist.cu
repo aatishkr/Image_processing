@@ -6,13 +6,14 @@ using namespace std;
 using namespace cv;
 
 #define NoOfBins 65536
-#define maxThresold 10
-#define minThersold 10
+#define maxThresold 8
+#define minThersold 8
 
 int histogram[NoOfBins];
 unsigned char histogram_LUT[NoOfBins];
 unsigned char *d_histogram_ptr;
 unsigned int *d_hist_max, *d_hist_min;
+
 
 __global__ void creatLUT(unsigned char *d_histogram, unsigned int *hist_min, unsigned int *hist_max)
 {
