@@ -1,0 +1,23 @@
+from cv2 import CV_16S, CV_16U, CV_32F, CV_32S, CV_64F, CV_8S, CV_8U
+import numpy as np
+import cv2
+
+def applySobel(img_gray):
+    img_blur = cv2.GaussianBlur(img_gray, (3,3), 0) 
+    sobel = cv2.Sobel(src=img_blur, ddepth=CV_8U, dx=1, dy=1, ksize=3)
+    output = np.zeros(img.shape, dtype=np.uint8)
+    # final = cv2.normalize(sobel,  output, 0, 65535, cv2.NORM_MINMAX)
+    return sobel
+
+vid = cv2.VideoCapture(0)
+  
+while(True):
+      
+    # Capture the video frame
+    # by frame
+    ret, img = vid.read()
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = applySobel(img)
+    cv2.imshow('graycsale image',img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
