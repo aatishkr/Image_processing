@@ -6,8 +6,8 @@ min_threshold = 10
 max_threshold = 10
 
 img_array = []
-for filename in glob.glob('/home/kali/Documents/16BitFrames/*.png'):
-    img = cv2.imread(filename,-1)
+for filename in glob.glob('/Users/aatishkumar/Desktop/codes/DataSet/1a/*.bmp'):
+    img = cv2.imread(filename,0)
     height, width = img.shape
     size = (width,height)
     img_array.append(img)
