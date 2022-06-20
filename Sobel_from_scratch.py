@@ -5,7 +5,7 @@ import cv2
 
 path = "Goa.JPG"
 img = cv2.imread(path,0)
-
+#filters
 left_sobel = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
 top_sobel =  np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
 Gaussian = np.array([[1, 2, 1], [2, 4, 2], [1, 2, 1]])
