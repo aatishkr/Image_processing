@@ -34,6 +34,7 @@ for i in range(1,blur_image.shape[0]-1):
         if sobel[i][j] < 40:
             sobel[i][j] = 0
 b = 2*b
+k = 0
 lamda1 = 0.5(a + c + np.sqrt(b**2 + (a-c)**2))
 lamda2 = 0.5(a + c - np.sqrt(b**2 + (a-c)**2))
 R = lamda1*lamda2 - k*((lamda1-lamda2)**2)
